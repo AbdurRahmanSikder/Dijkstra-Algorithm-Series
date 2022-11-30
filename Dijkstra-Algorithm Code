@@ -18,7 +18,7 @@ source to node 5 ans is 5
 
 #include <bits/stdc++.h>
 using namespace std;
-const int inf = 1e9;
+const ll inf = 1000000000000000000;
 #define ll long long
 vector<pair<ll, ll>> adj[1000];
 void dijkstra(ll source, ll node)
