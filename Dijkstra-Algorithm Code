@@ -1,0 +1,71 @@
+/*
+Input : 
+5 6
+1 2 2
+2 5 5
+2 3 4
+1 4 1
+4 3 3
+3 5 1
+1
+Output :
+source to node 1 ans is 0
+source to node 2 ans is 2
+source to node 3 ans is 4
+source to node 4 ans is 1
+source to node 5 ans is 5
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+const int inf = 1e9;
+#define ll long long
+vector<pair<ll, ll>> adj[1000];
+void dijkstra(ll source, ll node)
+{
+  priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> pq;
+  vector<ll> ans(1000, inf);
+  ans[source] = 0;
+  pq.push({0, source}); // weight,source
+  while (!pq.empty())
+  {
+    ll parent_weight = pq.top().first;
+    ll parent_node = pq.top().second;
+    pq.pop();
+    for (auto it : adj[parent_node])
+    {
+      ll child_node = it.first;
+      ll child_weight = it.second;
+      if (ans[child_node] > child_weight + parent_weight) // relaxation
+      {
+        ans[child_node] = child_weight + parent_weight;
+        pq.push({ans[child_node], child_node});
+      }
+    }
+  }
+  // print
+  for (ll i = 1; i <= node; i++)
+    cout << "source to node " << i << " ans is " << ans[i] << endl;
+}
+void solve()
+{
+  ll source_node, node, edge, a, b, weight, i;
+  cin >> node >> edge;
+  for (i = 1; i <= edge; i++)
+  {
+    cin >> a >> b >> weight;
+    adj[a].push_back({b, weight});
+    adj[b].push_back({a, weight});
+  }
+  cin >> source_node;
+  dijkstra(source_node, node);
+}
+
+int main()
+{
+  ll t = 1;
+  while (t--)
+  {
+    solve();
+  }
+}
