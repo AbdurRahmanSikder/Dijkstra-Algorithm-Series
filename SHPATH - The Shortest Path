@@ -1,0 +1,72 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+const ll inf = 1000000000000000000;
+vector<pair<ll, ll>> adj[10002];
+map<string, ll> mp;
+void dijkstra(ll source, ll node, ll destination)
+{
+  priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> pq;
+  vector<ll> ans(node + 1, inf);
+  ans[source] = 0;
+  pq.push({0, source}); // weight,source
+  while (!pq.empty())
+  {
+    ll parent_weight = pq.top().first;
+    ll parent_node = pq.top().second;
+    pq.pop();
+    if (parent_weight > ans[parent_node])
+        continue;
+    for (auto it : adj[parent_node])
+    {
+      ll child_node = it.first;
+      ll child_weight = it.second;
+      if (ans[child_node] > child_weight + parent_weight) // relaxation
+      {
+        ans[child_node] = child_weight + parent_weight;
+        pq.push({ans[child_node], child_node});
+      }
+    }
+  }
+  // print
+  cout << ans[destination] << endl;
+}
+void solve()
+{
+  mp.clear();
+  ll node, it, query;
+  for (ll i = 0; i <= 10005; i++)
+    adj[i].clear();
+  cin >> node;
+  string s, p;
+  for (it = 1; it <= node; it++)
+  {
+    cin >> s;
+    mp[s] = it;
+    ll edge, a, b, weight, i;
+    cin >> edge;
+    for (i = 1; i <= edge; i++)
+    {
+      cin >> b >> weight;
+      adj[it].push_back({b, weight});
+      adj[b].push_back({it, weight});
+    }
+  }
+  cin >> query;
+  while (query--)
+  {
+    cin >> s >> p;
+    dijkstra(mp[s], node, mp[p]);
+  }
+}
+
+int main()
+{
+  ll t = 1;
+  cin >> t;
+  while (t--)
+  {
+    solve();
+  }
+}
