@@ -19,6 +19,8 @@ void dijkstra(ll source, ll node)
     {
       ll child_node = it.first;
       ll child_weight = it.second;
+			if (parent_weight > ans[parent_node])
+        continue;
       if (ans[child_node] > child_weight + parent_weight) // relaxation
       {
         mp[child_node] = parent_node;
