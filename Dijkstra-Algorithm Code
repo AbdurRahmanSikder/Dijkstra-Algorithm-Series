@@ -20,11 +20,11 @@ source to node 5 ans is 5
 using namespace std;
 #define ll long long
 const ll inf = 1000000000000000000;
-vector<pair<ll, ll>> adj[1000];
+vector<pair<ll, ll>> adj[100010];
 void dijkstra(ll source, ll node)
 {
   priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> pq;
-  vector<ll> ans(1000, inf);
+  vector<ll> ans(100010, inf);
   ans[source] = 0;
   pq.push({0, source}); // weight,source
   while (!pq.empty())
