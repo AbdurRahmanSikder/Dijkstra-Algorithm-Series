@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define vll vector<ll>
+#define pll pair<ll, ll>
+const ll inf = 1000000000;
+vector<pair<ll, ll>> adj[100010];
+set<pair<ll, pll>> ban;
+ll ans[3000][3000], path[3000][3000];
+void dijkstra(ll source, ll destination)
+{
+  ll final_distance = -1, parent_of_last_node;
+  priority_queue<pair<ll, pll>, vector<pair<ll, pll>>, greater<pair<ll, pll>>> pq;
+  for (ll i = 0; i < 3000; i++)
+    for (ll j = 0; j < 3000; j++)
+      ans[i][j] = inf;
+  ans[1][1] = 0;
+  pq.push({0, {1, 1}}); // weight,source
+  while (!pq.empty())
+  {
+    pair<ll, pll> a = pq.top();
+    ll parent_weight = a.first;
+    ll parent_node = a.second.first;
+    ll child_node = a.second.second;
+    pq.pop();
+    if (parent_weight > ans[parent_node][child_node])
+      continue;
+    if (child_node == destination)
+    {
+      final_distance = parent_weight; // check
+      parent_of_last_node = parent_node;
+      break;
+    }
+    for (auto it : adj[child_node])
+    {
+      ll grandchild = it.first;
+      if (ban.count({parent_node, {child_node, grandchild}}))
+        continue;
+      if (ans[child_node][grandchild] > parent_weight + 1) // relaxation
+      {
+        ans[child_node][grandchild] = parent_weight + 1;
+        path[child_node][grandchild] = parent_node;
+        pq.push({ans[child_node][grandchild], {child_node, grandchild}});
+      }
+    }
+  }
+  // print
+  cout << final_distance << endl;
+  if (final_distance > 0)
+  {
+    vll anspath;
+    ll child = parent_of_last_node, grandchild = destination;
+    anspath.push_back(grandchild);
+    anspath.push_back(child);
+    while (child != 1)
+    {
+      ll parent = path[child][grandchild];
+      anspath.push_back(parent);
+      grandchild = child;
+      child = parent;
+    }
+    reverse(anspath.begin(), anspath.end());
+    for (auto it : anspath)
+      cout << it << " ";
+    cout << endl;
+  }
+}
+void solve()
+{
+  ll source_node, node, edge, a, b, weight, i, query, c;
+  cin >> node >> edge >> query;
+  for (i = 1; i <= edge; i++)
+  {
+    cin >> a >> b;
+    adj[a].push_back({b, 1});
+    adj[b].push_back({a, 1});
+  }
+  while (query--)
+  {
+    cin >> a >> b >> c;
+    ban.insert({a, {b, c}});
+  }
+  dijkstra(1, node);
+}
+
+int main()
+{
+  ll t = 1;
+  while (t--)
+  {
+    solve();
+  }
+}
