@@ -32,6 +32,8 @@ void dijkstra(ll source, ll node)
     ll parent_weight = pq.top().first;
     ll parent_node = pq.top().second;
     pq.pop();
+     if (parent_weight > ans[parent_node])
+        continue;
     for (auto it : adj[parent_node])
     {
       ll child_node = it.first;
