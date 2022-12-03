@@ -4,25 +4,25 @@ using namespace std;
 #define vll vector<ll>
 #define pll pair<ll, ll>
 const ll inf = 1000000000;
-vector<pair<ll, ll>> adj[100010];
-set<pair<ll, pll>> ban;
-ll ans[3000][3000], path[3000][3000];
+vector<ll> adj[100010];
+set<pair<ll, pll>> hortal;
+ll path[3000][3000],ans[3000][3000];
 void dijkstra(ll source, ll destination)
-{
+{ 
   ll final_distance = -1, parent_of_last_node;
   priority_queue<pair<ll, pll>, vector<pair<ll, pll>>, greater<pair<ll, pll>>> pq;
   for (ll i = 0; i < 3000; i++)
     for (ll j = 0; j < 3000; j++)
-      ans[i][j] = inf;
+      ans[i][j] = inf,path[i][j] = 0;
   ans[1][1] = 0;
   pq.push({0, {1, 1}}); // weight,source
   while (!pq.empty())
   {
     pair<ll, pll> a = pq.top();
+    pq.pop();
     ll parent_weight = a.first;
     ll parent_node = a.second.first;
     ll child_node = a.second.second;
-    pq.pop();
     if (parent_weight > ans[parent_node][child_node])
       continue;
     if (child_node == destination)
@@ -31,10 +31,9 @@ void dijkstra(ll source, ll destination)
       parent_of_last_node = parent_node;
       break;
     }
-    for (auto it : adj[child_node])
+    for (auto grandchild : adj[child_node])
     {
-      ll grandchild = it.first;
-      if (ban.count({parent_node, {child_node, grandchild}}))
+      if (hortal.count({parent_node, {child_node, grandchild}}))
         continue;
       if (ans[child_node][grandchild] > parent_weight + 1) // relaxation
       {
@@ -72,13 +71,13 @@ void solve()
   for (i = 1; i <= edge; i++)
   {
     cin >> a >> b;
-    adj[a].push_back({b, 1});
-    adj[b].push_back({a, 1});
+    adj[a].push_back(b);
+    adj[b].push_back(a);
   }
   while (query--)
   {
     cin >> a >> b >> c;
-    ban.insert({a, {b, c}});
+    hortal.insert({a, {b, c}});
   }
   dijkstra(1, node);
 }
