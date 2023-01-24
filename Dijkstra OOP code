@@ -99,6 +99,7 @@ ll Dijkstra(ll source,ll destination)
 	priority_queue<state> pq;
 	pq.push({0, source}); // dist,source
 	vll ans(100005, INF);
+	ans[source] = 0;
 	while (!pq.empty())
 	{
 		state st = pq.top();
