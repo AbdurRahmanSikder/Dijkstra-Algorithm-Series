@@ -20,41 +20,41 @@ void __print(bool x) { cerr << (x ? "true" : "false"); }
 template <typename T, typename V>
 void __print(const pair<T, V> &x)
 {
-  cerr << '{';
-  __print(x.first);
-  cerr << ',';
-  __print(x.second);
-  cerr << '}';
+	cerr << '{';
+	__print(x.first);
+	cerr << ',';
+	__print(x.second);
+	cerr << '}';
 }
 template <typename T>
 void __print(const T &x)
 {
-  int f = 0;
-  cerr << '{';
-  for (auto &i : x)
-    cerr << (f++ ? "," : ""), __print(i);
-  cerr << "}";
+	int f = 0;
+	cerr << '{';
+	for (auto &i : x)
+		cerr << (f++ ? "," : ""), __print(i);
+	cerr << "}";
 }
 void _print() { cerr << "]\n"; }
 template <typename T, typename... V>
 void _print(T t, V... v)
 {
-  __print(t);
-  if (sizeof...(v))
-    cerr << ", ";
-  _print(v...);
+	__print(t);
+	if (sizeof...(v))
+		cerr << ", ";
+	_print(v...);
 }
 #ifndef ONLINE_JUDGE
-#define debug(x...)             \
-  cerr << "[" << #x << "] = ["; \
-  _print(x)
+#define debug(x...)               \
+	cerr << "[" << #x << "] = ["; \
+	_print(x)
 #else
 #define debug(x...)
 #endif
-#define IOS                \
-  ios::sync_with_stdio(0); \
-  cin.tie(0);              \
-  cout.tie(0);
+#define IOS                  \
+	ios::sync_with_stdio(0); \
+	cin.tie(0);              \
+	cout.tie(0);
 #define endl "\n"
 #define YES printf("YES\n")
 #define NO printf("NO\n")
@@ -79,62 +79,64 @@ const ll N = 10000007;
 #define mll map<long long, long long>
 struct edge
 {
-  ll others;
-  ll weight;
+	ll others;
+	ll weight;
 };
 struct state
 {
-  ll dist;
-  ll v;
-  bool operator<(const state &o) const
-  {
-    if (dist != o.dist)
-      return dist > o.dist;
-    return v > o.v;
-  }
+	ll dist;
+	ll v;
+	bool operator<(const state &o) const
+	{
+		if (dist != o.dist)
+			return dist > o.dist;
+		return v > o.v;
+	}
 };
 vector<edge> adj[100010];
+ll Dijkstra(ll source,ll destination)
+{
+	priority_queue<state> pq;
+	pq.push({0, source}); // dist,source
+	vll ans(100005, INF);
+	while (!pq.empty())
+	{
+		state st = pq.top();
+		pq.pop();
+		if (st.dist > ans[st.v])
+			continue;
+		for (auto it : adj[st.v])
+		{
+			if (ans[it.others] > it.weight + st.dist)
+			{
+				ans[it.others] = it.weight + st.dist;
+				pq.push({ans[it.others], it.others});
+			}
+		}
+	}
+	return ans[destination];
+}
 void solve()
 {
-  ll i, a, b, wt, q = 0, l, r = INT_MAX, j, k = 0, x0 = 0, x1 = 0, n,a1,b1;
-  cin >> n >> k >>  a1 >> b1;
-  for (i = 0; i < k; i++)
-  {
-    cin >> a >> b >> wt;
-    adj[a].pb({b, wt});
-    adj[b].pb({a, wt});
-  }
-  priority_queue<state> pq;
-  pq.push({0, a1}); // dist,source
-  vll ans(n + 5, INF);
-  while (!pq.empty())
-  {
-    state st = pq.top();
-    pq.pop();
-    if(st.dist > ans[st.v])
-      continue;
-    for (auto it : adj[st.v])
-    {
-      if (ans[it.others] > it.weight + st.dist)
-      {
-        ans[it.others] = it.weight + st.dist;
-        pq.push({ans[it.others],it.others});
-      }
-    }
-  }
-  cout<<ans[b1]<<endl;
-  //a1 = source
-  //b1 = destination
+	ll i, a, b, wt, n ,k, source , des;
+	cin >> n >> k >> source >> des;
+	for (i = 0; i < k; i++)
+	{
+		cin >> a >> b >> wt;
+		adj[a].pb({b, wt});
+		adj[b].pb({a, wt});
+	}
+	cout<<Dijkstra(source,des)<<endl;
 }
 int main()
 {
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
-  cout.tie(NULL);
-  ll t = 1;
-  //cin >> t;
-  while (t--)
-  {
-    solve();
-  }
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ll t = 1;
+	// cin >> t;
+	while (t--)
+	{
+		solve();
+	}
 }
